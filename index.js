@@ -14,10 +14,10 @@ const RoleService = require('./Services/RoleService')
 //Config banco
 const query = new Pool({
   user: 'sysadm',
-  host: 'dobkovski.com',
+  host: '192.168.0.253',
   database: 'sysadm',
   password: 'R00tk1t!',
-  port: 9090,
+  port: 5432,
 });
 
 app.use(bodyParser.json())
@@ -60,12 +60,12 @@ function formatResponseHtml(success, responseJson, error, bolObject) {
     /*
       Função que insere uma nova Advocacia, sempre com status 1 de ativo
 
-      url: link/insertNewAdvocacy
+      url: link/insertAdvocacy
       Method: POST
       Recebe:
           nameAdvocacy - String - Nome da advocacia
           addressAdvocacy - String - Endereço da advocacia (Rua)
-          cityAadvocacy - String - Cidade da advocacia
+          cityAdvocacy - String - Cidade da advocacia
           bairroAdvocacy - String - Bairro da advocacia
           ufAdvocacy - String - Uf da advocacia, 2 caracteres
           phoneAdvocacy - String - Telefone da advocacia
@@ -76,17 +76,56 @@ function formatResponseHtml(success, responseJson, error, bolObject) {
           {success: true ou false, erro:[]}
 
       Utiliza as funções:
-          insertNewAdvocacy: AdvocacyService
+          insertAdvocacy: AdvocacyService
     */
 
-app.post('/insertNewAdvocacy', (request, response) => {
-    const {nameAdvocacy, addressAdvocacy,cityAadvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy, latitudeAdvocacy, longitudeAdvocacy} = checkRequisitionType(request.body);
+app.post('/insertAdvocacy', (request, response) => {
+    const {nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy, latitudeAdvocacy, longitudeAdvocacy} = checkRequisitionType(request.body);
 
     const advocacyService = new AdvocacyService(query);
 
-    advocacyService.insertNewAdvocacy(nameAdvocacy, addressAdvocacy,cityAadvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy).then(res => {
+    advocacyService.insertAdvocacy(nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy).then(res => {
       response.send(formatResponseHtml(res.success, res.jsonData, res.error));
     })
+})
+
+app.post('/updateAdvocacy', (request, response) => {
+  const {idAdvocacy, nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy, latitudeAdvocacy, longitudeAdvocacy} = checkRequisitionType(request.body);
+
+  const advocacyService = new AdvocacyService(query);
+
+  advocacyService.updateAdvocacy(idAdvocacy, nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteAdvocacy', (request, response) => {
+  const {idAdvocacy} = checkRequisitionType(request.body);
+
+  const advocacyService = new AdvocacyService(query);
+
+  advocacyService.deleteAdvocacy(idAdvocacy).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectAllAdvocacies', (request, response) => {
+  
+  const advocacyService = new AdvocacyService(query);
+
+  advocacyService.selectAllAdvocacies().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/selectAdvocacy', (request, response) => {
+  const {idAdvocacy} = checkRequisitionType(request.body);
+
+  const advocacyService = new AdvocacyService(query);
+
+  advocacyService.selectAdvocacy(idAdvocacy).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
 })
 
     /*
@@ -99,7 +138,7 @@ app.post('/insertNewAdvocacy', (request, response) => {
           {success: true ou false, erro:[]}
 
       Utiliza as funções:
-          insertNewAdvocacy: AdvocacyService
+          insertAdvocacy: AdvocacyService
     */
 
   app.post('/insertNewWindow', (request, response) => {
@@ -125,7 +164,7 @@ app.post('/insertNewAdvocacy', (request, response) => {
           {success: true ou false, erro:[]}
 
       Utiliza as funções:
-          insertNewAdvocacy: AdvocacyService
+          insertAdvocacy: AdvocacyService
     */
 
    app.post('/insertNewRole', (request, response) => {
@@ -140,5 +179,7 @@ app.post('/insertNewAdvocacy', (request, response) => {
       res.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
     });
   })
+
+
 
 app.listen(port, () => {})

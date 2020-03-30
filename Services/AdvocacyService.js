@@ -12,7 +12,7 @@ class AdvocacyService {
       Recebe:
           nameAdvocacy - String - Nome da advocacia
           addressAdvocacy - String - Endereço da advocacia (Rua)
-          cityAadvocacy - String - Cidade da advocacia
+          cityAdvocacy - String - Cidade da advocacia
           bairroAdvocacy - String - Bairro da advocacia
           ufAdvocacy - String - Uf da advocacia, 2 caracteres
           phoneAdvocacy - String - Telefone da advocacia
@@ -21,19 +21,52 @@ class AdvocacyService {
           {success: true ou false, erro:[]}
 
       Utiliza as funções:
-          insertNewAdvocacy: advocacyRepository
+          insertAdvocacy: advocacyRepository
     */
 
-    async insertNewAdvocacy(nameAdvocacy, addressAdvocacy,cityAadvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy){
+    async insertAdvocacy(nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy){
         const advocacyRepository = new AdvocacyRepository(this.query);
         
         let initialStatus = 1;
 
-        let response =  await advocacyRepository.insertNewAdvocacy(nameAdvocacy, addressAdvocacy,cityAadvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy,initialStatus);
+        let response =  await advocacyRepository.insertAdvocacy(nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy,initialStatus);
+
+        return response
+    }
+    async deleteAdvocacy (idAdvocacy){
+        const advocacyRepository = new AdvocacyRepository(this.query);
+        
+        let response = await advocacyRepository.deleteAdvocacy(idAdvocacy);
+
+        return response
+    }
+    async selectAllAdvocacies (){
+        const advocacyRepository = new AdvocacyRepository(this.query);
+
+        let response = await advocacyRepository.selectAllAdvocacies();
+
+        console.log (response);
 
         return response
     }
 
+    async selectAdvocacy (idAdvocacy){
+        const advocacyRepository = new AdvocacyRepository(this.query);
+        
+        let response = await advocacyRepository.selectAdvocacy(idAdvocacy);
+
+        return response
+    }
+
+    async updateAdvocacy(idAdvocacy, nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy){
+        const advocacyRepository = new AdvocacyRepository(this.query);
+        
+        let initialStatus = 1;
+
+        let response =  await advocacyRepository.updateAdvocacy(idAdvocacy, nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy,initialStatus);
+
+        return response
+    }
 };
 
 module.exports = AdvocacyService;
