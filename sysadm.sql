@@ -1,5 +1,4 @@
 --
--- PostgreSQL database dump
 --
 
 -- Dumped from database version 12.2
