@@ -35,7 +35,6 @@ function checkRequisitionType (body){
 }
 
 function formatResponseHtml(success, responseJson, error, bolObject) {
-    
   if (success) {
       //se for objeto  tipo imagem,arquivo, nao passa pelo JSON.stringify
       let jsonString = (bolObject == null || bolObject === undefined || bolObject == false || responseJson != {} ) 
