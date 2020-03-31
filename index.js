@@ -190,6 +190,35 @@ app.delete('/deleteUser', (request, response) => {
   });
 })
 
+app.post('/insertCashier', (request, response) => {
+  const {idAdvocacypk, nameCashier, currentMoney,statusCashier} = checkRequisitionType(request.body);
+
+  const cashierService = new CashierService (query);
+
+  cashierService.insertCashier(idAdvocacypk, nameCashier, currentMoney,statusCashier).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteCashier', (request, response) => {
+  const {idCashier} = checkRequisitionType(request.body);
+
+  const cashierService = new CashierService (query);
+
+  cashierService.deleteCashier(idCashier).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectAllCashiers', (request, response) => {
+
+  const cashierService = new CashierService(query);
+
+  cashierService.selectAllCashiers().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
 app.post('/updateCashier', (request, response) => {
   const {idCashier, idAdvocacypk, nameCashier, currentMoney,statusCashier} = checkRequisitionType(request.body);
 
