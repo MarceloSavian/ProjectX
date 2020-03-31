@@ -45,8 +45,6 @@ class AdvocacyService {
 
         let response = await advocacyRepository.selectAllAdvocacies();
 
-        console.log (response);
-
         return response
     }
 
