@@ -9,6 +9,7 @@ const errorService = new ErrorFunctions();
 
 const AdvocacyService = require('./Services/AdvocacyService')
 const UserService = require('./Services/UserService')
+const CashierService = require('./Services/CashierService')
 
 //Config banco
 const query = new Pool({
@@ -35,7 +36,6 @@ function checkRequisitionType (body){
 }
 
 function formatResponseHtml(success, responseJson, error, bolObject) {
-    
   if (success) {
       //se for objeto  tipo imagem,arquivo, nao passa pelo JSON.stringify
       let jsonString = (bolObject == null || bolObject === undefined || bolObject == false || responseJson != {} ) 
