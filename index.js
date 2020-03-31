@@ -5,7 +5,7 @@ const port = 3000
 const Pool = require('pg').Pool
 
 const { ErrorFunctions, ERRORS } = require('./Services/ErrorService');
-const ErrorService = new ErrorFunctions();
+const errorService = new ErrorFunctions();
 
 const AdvocacyService = require('./Services/AdvocacyService')
 const WindowService = require('./Services/WindowService')
@@ -86,7 +86,10 @@ app.post('/insertNewAdvocacy', (request, response) => {
 
     advocacyService.insertNewAdvocacy(nameAdvocacy, addressAdvocacy,cityAadvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy).then(res => {
       response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-    })
+    }).catch(e => {
+      console.log("erro", e.message);
+      res.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+    });
 })
 
     /*
