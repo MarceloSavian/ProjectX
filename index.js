@@ -159,4 +159,14 @@ app.get('/selectAllCashiers', (request, response) => {
   })
 })
 
+app.post('/updateCashier', (request, response) => {
+  const {idCashier, idAdvocacypk, nameCashier, currentMoney,statusCashier} = checkRequisitionType(request.body);
+
+  const cashierService = new CashierService(query);
+
+  cashierService.updateCashier(idCashier, idAdvocacypk, nameCashier, currentMoney,statusCashier).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
 app.listen(port, () => {})

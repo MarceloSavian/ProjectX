@@ -7,7 +7,8 @@ ERRORS = Object.freeze({
 
 errors = [
     { code: ERRORS.GENERIC, description: "Erro gen�rico" },
-    { code: ERRORS.CONNECTION_ERROR, description: "Erro de conexão"}
+    { code: ERRORS.CONNECTION_ERROR, description: "Erro de conexão"},
+    { code: ERRORS.UPDATE_CASHIER_ERROR, description: "Caixa não pode ser editado se estiver aberto"}
 ];
 
 class ErrorFunctions {
