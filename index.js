@@ -17,7 +17,7 @@ const query = new Pool({
   host: '192.168.0.253',
   database: 'sysadm',
   password: 'R00tk1t!',
-  port: 5432,
+  port: 5432
 });
 
 app.use(bodyParser.json())
@@ -57,27 +57,25 @@ function formatResponseHtml(success, responseJson, error, bolObject) {
   }
 }
 
-    /*
-      Função que insere uma nova Advocacia, sempre com status 1 de ativo
-
-      url: link/insertAdvocacy
-      Method: POST
-      Recebe:
-          nameAdvocacy - String - Nome da advocacia
-          addressAdvocacy - String - Endereço da advocacia (Rua)
-          cityAdvocacy - String - Cidade da advocacia
-          bairroAdvocacy - String - Bairro da advocacia
-          ufAdvocacy - String - Uf da advocacia, 2 caracteres
-          phoneAdvocacy - String - Telefone da advocacia
-          cnpjAdvocacy - String - Cnpj da advocacia
-          latitudeAdvocacy - Float - Latitude advocacia
-          longitudeAdvocacy - Float - Longitude advocacia
-      Retorna:
-          {success: true ou false, erro:[]}
-
-      Utiliza as funções:
-          insertAdvocacy: AdvocacyService
-    */
+/*
+* Função que insere uma nova Advocacia, sempre com status 1 de ativo
+* url: link/insertAdvocacy
+* Method: POST
+* Recebe:
+*     nameAdvocacy - String - Nome da advocacia
+*     addressAdvocacy - String - Endereço da advocacia (Rua)
+*     cityAdvocacy - String - Cidade da advocacia
+*     bairroAdvocacy - String - Bairro da advocacia
+*     ufAdvocacy - String - Uf da advocacia, 2 caracteres
+*     phoneAdvocacy - String - Telefone da advocacia
+*     cnpjAdvocacy - String - Cnpj da advocacia
+*     latitudeAdvocacy - Float - Latitude advocacia
+*     longitudeAdvocacy - Float - Longitude advocacia
+* Retorna:
+*     {success: true ou false, erro:[]}
+* Utiliza as funções:
+*     insertAdvocacy: AdvocacyService
+*/
 
 app.post('/insertAdvocacy', (request, response) => {
     const {nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy, latitudeAdvocacy, longitudeAdvocacy} = checkRequisitionType(request.body);
@@ -131,57 +129,6 @@ app.post('/selectAdvocacy', (request, response) => {
   })
 })
 
-    /*
-      Função que insere uma nova Tela, sempre com status 1 de ativo
-
-      Recebe:
-          actionWindow - String - Actions da window, separada por virgula
-          nameWindow -String - Nome da tela
-      Retorna:
-          {success: true ou false, erro:[]}
-
-      Utiliza as funções:
-          insertAdvocacy: AdvocacyService
-    */
-
-  app.post('/insertNewWindow', (request, response) => {
-    const {actionWindow,nameWindow} = checkRequisitionType(request.body);
-
-    const windowService = new WindowService(query);
-
-    windowService.insertNewWindow(actionWindow,nameWindow).then(res => {
-      response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-    }).catch(e => {
-      console.log("erro", e.message);
-      res.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
-    });
-  })
-
-    /*
-      Função que insere uma nova Tela, sempre com status 1 de ativo
-
-      Recebe:
-          actionWindow - String - Actions da window, separada por virgula
-          nameWindow -String - Nome da tela
-      Retorna:
-          {success: true ou false, erro:[]}
-
-      Utiliza as funções:
-          insertAdvocacy: AdvocacyService
-    */
-
-   app.post('/insertNewRole', (request, response) => {
-    const {nameRole,descriptionRole} = checkRequisitionType(request.body);
-
-    const roleService = new RoleService(query);
-
-    roleService.insertNewRole(nameRole,descriptionRole).then(res => {
-      response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-    }).catch(e => {
-      console.log("erro", e.message);
-      res.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
-    });
-  })
 
 
 
