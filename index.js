@@ -8,6 +8,7 @@ const { ErrorFunctions, ERRORS } = require('./Services/ErrorService');
 const errorService = new ErrorFunctions();
 
 const AdvocacyService = require('./Services/AdvocacyService')
+const UserService = require('./Services/UserService')
 const CashierService = require('./Services/CashierService')
 
 //Config banco
@@ -35,7 +36,6 @@ function checkRequisitionType (body){
 }
 
 function formatResponseHtml(success, responseJson, error, bolObject) {
-    
   if (success) {
       //se for objeto  tipo imagem,arquivo, nao passa pelo JSON.stringify
       let jsonString = (bolObject == null || bolObject === undefined || bolObject == false || responseJson != {} ) 
@@ -85,7 +85,7 @@ app.post('/insertAdvocacy', (request, response) => {
       response.send(formatResponseHtml(res.success, res.jsonData, res.error));
     }).catch(e => {
       console.log("erro", e.message);
-      res.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+      response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
     });
 })
 
@@ -96,7 +96,10 @@ app.post('/updateAdvocacy', (request, response) => {
 
   advocacyService.updateAdvocacy(idAdvocacy, nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
 app.post('/deleteAdvocacy', (request, response) => {
@@ -106,7 +109,10 @@ app.post('/deleteAdvocacy', (request, response) => {
 
   advocacyService.deleteAdvocacy(idAdvocacy).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
 app.get('/selectAllAdvocacies', (request, response) => {
@@ -115,7 +121,10 @@ app.get('/selectAllAdvocacies', (request, response) => {
 
   advocacyService.selectAllAdvocacies().then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
 app.post('/selectAdvocacy', (request, response) => {
@@ -125,38 +134,60 @@ app.post('/selectAdvocacy', (request, response) => {
 
   advocacyService.selectAdvocacy(idAdvocacy).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
-/*CASHIER*/
+app.post('/insertUser', (request, response) => {
+  const {nameUser, cpfUser, rgUser, emailUser, phoneUser, addressUser, ufUser, bairroUser, cityUser, passwordUser, oabUser, advocacyId} = checkRequisitionType(request.body);
 
-app.post('/insertCashier', (request, response) => {
-    const {idAdvocacypk, nameCashier, currentMoney,statusCashier} = checkRequisitionType(request.body);
+  const userService = new UserService(query);
 
-    const cashierService = new CashierService (query);
-
-    cashierService.insertCashier(idAdvocacypk, nameCashier, currentMoney,statusCashier).then(res => {
-      response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-    })
-})
-
-app.post('/deleteCashier', (request, response) => {
-  const {idCashier} = checkRequisitionType(request.body);
-
-  const cashierService = new CashierService (query);
-
-  cashierService.deleteCashier(idCashier).then(res => {
+  userService.insertUser(nameUser, cpfUser, rgUser, emailUser, phoneUser, addressUser, ufUser, bairroUser, cityUser, passwordUser, oabUser, advocacyId).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
-app.get('/selectAllCashiers', (request, response) => {
-  
-  const cashierService = new CashierService(query);
+app.post('/updateUser', (request, response) => {
+  const {nameUser, cpfUser, rgUser, emailUser, phoneUser, addressUser, ufUser, bairroUser, cityUser, passwordUser, oabUser, advocacyId, idUser} = checkRequisitionType(request.body);
 
-  cashierService.selectAllCashiers().then(res => {
+  const userService = new UserService(query);
+
+  userService.updateUser(nameUser, cpfUser, rgUser, emailUser, phoneUser, addressUser, ufUser, bairroUser, cityUser, passwordUser, oabUser, advocacyId, idUser).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
+})
+
+app.get('/selectAllUsers', (request, response) => {
+  const userService = new UserService(query);
+
+  userService.selectAllUsers().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
+})
+
+app.delete('/deleteUser', (request, response) => {
+  const {idUser} = checkRequisitionType(request.query);
+
+  const userService = new UserService(query);
+
+  userService.deleteUser(idUser).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
 app.post('/updateCashier', (request, response) => {
