@@ -8,9 +8,7 @@ const { ErrorFunctions, ERRORS } = require('./Services/ErrorService');
 const errorService = new ErrorFunctions();
 
 const AdvocacyService = require('./Services/AdvocacyService')
-const WindowService = require('./Services/WindowService')
-const RoleService = require('./Services/RoleService')
-const CashierService = require('./Services/CashierService')
+const UserService = require('./Services/UserService')
 
 //Config banco
 const query = new Pool({
@@ -87,7 +85,7 @@ app.post('/insertAdvocacy', (request, response) => {
       response.send(formatResponseHtml(res.success, res.jsonData, res.error));
     }).catch(e => {
       console.log("erro", e.message);
-      res.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+      response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
     });
 })
 
@@ -98,7 +96,10 @@ app.post('/updateAdvocacy', (request, response) => {
 
   advocacyService.updateAdvocacy(idAdvocacy, nameAdvocacy, addressAdvocacy,cityAdvocacy,bairroAdvocacy,ufAdvocacy,phoneAdvocacy,cnpjAdvocacy,latitudeAdvocacy,longitudeAdvocacy).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
 app.post('/deleteAdvocacy', (request, response) => {
@@ -108,7 +109,10 @@ app.post('/deleteAdvocacy', (request, response) => {
 
   advocacyService.deleteAdvocacy(idAdvocacy).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
 app.get('/selectAllAdvocacies', (request, response) => {
@@ -117,7 +121,10 @@ app.get('/selectAllAdvocacies', (request, response) => {
 
   advocacyService.selectAllAdvocacies().then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
 app.post('/selectAdvocacy', (request, response) => {
@@ -127,92 +134,61 @@ app.post('/selectAdvocacy', (request, response) => {
 
   advocacyService.selectAdvocacy(idAdvocacy).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
-/*CASHIER*/
+app.post('/insertUser', (request, response) => {
+  const {nameUser, cpfUser, rgUser, emailUser, phoneUser, addressUser, ufUser, bairroUser, cityUser, passwordUser, oabUser, advocacyId} = checkRequisitionType(request.body);
 
-app.post('/insertCashier', (request, response) => {
-    const {idAdvocacypk, nameCashier, currentMoney,statusCashier} = checkRequisitionType(request.body);
+  const userService = new UserService(query);
 
-    const cashierService = new CashierService (query);
-
-    cashierService.insertCashier(idAdvocacypk, nameCashier, currentMoney,statusCashier).then(res => {
-      response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-    })
-})
-
-app.post('/deleteCashier', (request, response) => {
-  const {idCashier} = checkRequisitionType(request.body);
-
-  const cashierService = new CashierService (query);
-
-  cashierService.deleteCashier(idCashier).then(res => {
+  userService.insertUser(nameUser, cpfUser, rgUser, emailUser, phoneUser, addressUser, ufUser, bairroUser, cityUser, passwordUser, oabUser, advocacyId).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
-app.get('/selectAllCashiers', (request, response) => {
-  
-  const cashierService = new CashierService(query);
+app.post('/updateUser', (request, response) => {
+  const {nameUser, cpfUser, rgUser, emailUser, phoneUser, addressUser, ufUser, bairroUser, cityUser, passwordUser, oabUser, advocacyId, idUser} = checkRequisitionType(request.body);
 
-  cashierService.selectAllCashiers().then(res => {
+  const userService = new UserService(query);
+
+  userService.updateUser(nameUser, cpfUser, rgUser, emailUser, phoneUser, addressUser, ufUser, bairroUser, cityUser, passwordUser, oabUser, advocacyId, idUser).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-  })
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
 })
 
-    /*
-      Função que insere uma nova Tela, sempre com status 1 de ativo
+app.get('/selectAllUsers', (request, response) => {
+  const userService = new UserService(query);
 
-      Recebe:
-          actionWindow - String - Actions da window, separada por virgula
-          nameWindow -String - Nome da tela
-      Retorna:
-          {success: true ou false, erro:[]}
+  userService.selectAllUsers().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
+})
 
-      Utiliza as funções:
-          insertAdvocacy: AdvocacyService
-    */
+app.delete('/deleteUser', (request, response) => {
+  const {idUser} = checkRequisitionType(request.query);
 
-  app.post('/insertNewWindow', (request, response) => {
-    const {actionWindow,nameWindow} = checkRequisitionType(request.body);
+  const userService = new UserService(query);
 
-    const windowService = new WindowService(query);
-
-    windowService.insertNewWindow(actionWindow,nameWindow).then(res => {
-      response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-    }).catch(e => {
-      console.log("erro", e.message);
-      res.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
-    });
-  })
-
-    /*
-      Função que insere uma nova Tela, sempre com status 1 de ativo
-
-      Recebe:
-          actionWindow - String - Actions da window, separada por virgula
-          nameWindow -String - Nome da tela
-      Retorna:
-          {success: true ou false, erro:[]}
-
-      Utiliza as funções:
-          insertAdvocacy: AdvocacyService
-    */
-
-   app.post('/insertNewRole', (request, response) => {
-    const {nameRole,descriptionRole} = checkRequisitionType(request.body);
-
-    const roleService = new RoleService(query);
-
-    roleService.insertNewRole(nameRole,descriptionRole).then(res => {
-      response.send(formatResponseHtml(res.success, res.jsonData, res.error));
-    }).catch(e => {
-      console.log("erro", e.message);
-      res.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
-    });
-  })
-
+  userService.deleteUser(idUser).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
+})
 
 
 app.listen(port, () => {})
