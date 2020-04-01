@@ -10,6 +10,7 @@ const errorService = new ErrorFunctions();
 const AdvocacyService = require('./Services/AdvocacyService')
 const UserService = require('./Services/UserService')
 const CashierService = require('./Services/CashierService')
+const AuthService = require('./Services/AuthService')
 
 //Config banco
 const query = new Pool({
@@ -183,6 +184,19 @@ app.delete('/deleteUser', (request, response) => {
   const userService = new UserService(query);
 
   userService.deleteUser(idUser).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  }).catch(e => {
+    console.log("erro", e.message);
+    response.send(formatResponseHtml(false, '', errorService.formatReponseError(ERRORS.GENERIC, e.message)));
+  });
+})
+
+app.post('/userLogin', (request, response) => {
+  const {email, password} = checkRequisitionType(request.body);
+
+  const authService = new AuthService(query);
+
+  authService.userLogin(email, password).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
   }).catch(e => {
     console.log("erro", e.message);

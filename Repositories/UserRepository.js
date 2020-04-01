@@ -38,6 +38,7 @@ class UserRepository{
                 if (error) {
                     console.log(error);
                     resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
+                    return
                 }
                 resolve({success:true, error:[], jsonData:[]})
             })
@@ -50,6 +51,7 @@ class UserRepository{
                 if (error) {
                     console.log(error);
                     resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
+                    return
                 }   
                 resolve({success:true, error:[], jsonData:results.rows})
             })
@@ -62,6 +64,20 @@ class UserRepository{
                 if (error) {
                     console.log(error);
                     resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
+                    return
+                }   
+                resolve({success:true, error:[], jsonData:results.rows})
+            })
+        });
+    }
+
+    selectUserByEmailAndPassword(emailUser,passwordUser){
+        return new Promise((resolve, reject) => {
+            this.query.query(`SELECT * FROM "user" WHERE emailuser='${emailUser}' AND passworduser='${passwordUser}'`, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
+                    return
                 }   
                 resolve({success:true, error:[], jsonData:results.rows})
             })
@@ -74,6 +90,7 @@ class UserRepository{
                 if (error) {
                     console.log(error);
                     resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
+                    return
                 }   
                 resolve({success:true, error:[], jsonData:results.rows})
             })
