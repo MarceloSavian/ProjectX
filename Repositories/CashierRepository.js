@@ -18,9 +18,10 @@ class CashierRepository{
             })
         });
     }
+
     deleteCashier(idCashier){
         return new Promise((resolve, reject) => {
-            this.query.query(`UPDATE cashier SET statuscashier = FALSE where idcashier = ${idCashier}`, (error, results) => {
+            this.query.query(`UPDATE cashier SET isactive = FALSE where idcashier = ${idCashier}`, (error, results) => {
                 if (error) {
                     console.log(error);
                     resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
@@ -32,7 +33,7 @@ class CashierRepository{
 
     selectAllCashiers(){
         return new Promise((resolve, reject) => {
-            this.query.query('SELECT * FROM cashier', (error, results) => {
+            this.query.query('SELECT * FROM cashier WHERE isactive = true', (error, results) => {
                 if (error) {
                     console.log(error);
                     resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
@@ -42,9 +43,9 @@ class CashierRepository{
         });
     }
 
-    updateCashier(idAdvocacypk, nameCashier, currentMoney,statusCashier){
+    updateCashier(idCashier, idAdvocacypk, nameCashier, currentMoney,statusCashier){
         return new Promise((resolve, reject) => {
-            this.query.query(`UPDATE cashier SET idadvocacypk = '${idAdvocacypk}', nameCashier = '${nameCashier}',currentMoney = '${currentMoney}',statusCashier = '${statusCashier}`, (error, results) => {
+            this.query.query(`UPDATE cashier SET idadvocacypk = ${idAdvocacypk}, nameCashier = '${nameCashier}',currentMoney = ${currentMoney},statusCashier = '${statusCashier}' where idCashier = ${idCashier}`, (error, results) => {
                 if (error) {
                     console.log(error);
                     resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
@@ -66,7 +67,16 @@ class CashierRepository{
         });
     }
 
-
+    checkStatusCashier(idCashier){
+        return new Promise((resolve, reject) => {
+            this.query.query(`SELECT statusCashier FROM cashier where idCashier = ${idCashier}`, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
+                }   
+                resolve({success:true, error:[], jsonData:results.rows})
+            })
+        });  
+    }
 }
-
 module.exports = CashierRepository;

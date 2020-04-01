@@ -1,4 +1,5 @@
 --
+-- PostgreSQL database dump
 --
 
 -- Dumped from database version 12.2
@@ -74,17 +75,39 @@ CREATE TABLE public.advocacycustomer (
 ALTER TABLE public.advocacycustomer OWNER TO sysadm;
 
 --
--- Name: advocacyuserroleright; Type: TABLE; Schema: public; Owner: sysadm
+-- Name: advocacyuser; Type: TABLE; Schema: public; Owner: sysadm
 --
 
-CREATE TABLE public.advocacyuserroleright (
-    idadvocacyfk integer NOT NULL,
-    idrolerightsfk integer NOT NULL,
-    idutilizerfk integer NOT NULL
+CREATE TABLE public.advocacyuser (
+    idadvocacyuser integer NOT NULL,
+    idadvocacyfk integer,
+    iduserfk integer
 );
 
 
-ALTER TABLE public.advocacyuserroleright OWNER TO sysadm;
+ALTER TABLE public.advocacyuser OWNER TO sysadm;
+
+--
+-- Name: advocacyuser_idadvocacyuser_seq; Type: SEQUENCE; Schema: public; Owner: sysadm
+--
+
+CREATE SEQUENCE public.advocacyuser_idadvocacyuser_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.advocacyuser_idadvocacyuser_seq OWNER TO sysadm;
+
+--
+-- Name: advocacyuser_idadvocacyuser_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sysadm
+--
+
+ALTER SEQUENCE public.advocacyuser_idadvocacyuser_seq OWNED BY public.advocacyuser.idadvocacyuser;
+
 
 --
 -- Name: arealitigation; Type: TABLE; Schema: public; Owner: sysadm
@@ -169,9 +192,10 @@ ALTER SEQUENCE public.cashflow_idcashflow_seq OWNED BY public.cashflow.idcashflo
 CREATE TABLE public.cashier (
     idcashier integer NOT NULL,
     idadvocacypk integer NOT NULL,
-    namecachier character varying(100) NOT NULL,
+    namecashier character varying(100) NOT NULL,
     currentmoney real,
-    statuscashier boolean
+    statuscashier boolean DEFAULT true,
+    isactive boolean DEFAULT true NOT NULL
 );
 
 
@@ -454,75 +478,6 @@ ALTER SEQUENCE public.movementtypes_idmovementtypes_seq OWNED BY public.movement
 
 
 --
--- Name: role; Type: TABLE; Schema: public; Owner: sysadm
---
-
-CREATE TABLE public.role (
-    idrole integer NOT NULL,
-    namerole character varying(50) NOT NULL,
-    descriptionrole character varying(200) NOT NULL
-);
-
-
-ALTER TABLE public.role OWNER TO sysadm;
-
---
--- Name: role_idrole_seq; Type: SEQUENCE; Schema: public; Owner: sysadm
---
-
-CREATE SEQUENCE public.role_idrole_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.role_idrole_seq OWNER TO sysadm;
-
---
--- Name: role_idrole_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sysadm
---
-
-ALTER SEQUENCE public.role_idrole_seq OWNED BY public.role.idrole;
-
-
---
--- Name: rolerights; Type: TABLE; Schema: public; Owner: sysadm
---
-
-CREATE TABLE public.rolerights (
-    idroleright integer NOT NULL,
-    idwindowfk integer,
-    idrolefk integer,
-    actionrolerights text[]
-);
-
-
-ALTER TABLE public.rolerights OWNER TO sysadm;
-
---
--- Name: rolerights_idroleright_seq; Type: SEQUENCE; Schema: public; Owner: sysadm
---
-
-CREATE SEQUENCE public.rolerights_idroleright_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.rolerights_idroleright_seq OWNER TO sysadm;
-
---
--- Name: rolerights_idroleright_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sysadm
---
-
-ALTER SEQUENCE public.rolerights_idroleright_seq OWNED BY public.rolerights.idroleright;
-
-
---
 -- Name: statuslitigation; Type: TABLE; Schema: public; Owner: sysadm
 --
 
@@ -709,44 +664,17 @@ ALTER SEQUENCE public.utilizer_iduser_seq OWNED BY public."user".iduser;
 
 
 --
--- Name: windows; Type: TABLE; Schema: public; Owner: sysadm
---
-
-CREATE TABLE public.windows (
-    idwindow integer NOT NULL,
-    namewindow character varying(100) NOT NULL,
-    actionwindow character varying(100)
-);
-
-
-ALTER TABLE public.windows OWNER TO sysadm;
-
---
--- Name: windows_idwindow_seq; Type: SEQUENCE; Schema: public; Owner: sysadm
---
-
-CREATE SEQUENCE public.windows_idwindow_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.windows_idwindow_seq OWNER TO sysadm;
-
---
--- Name: windows_idwindow_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sysadm
---
-
-ALTER SEQUENCE public.windows_idwindow_seq OWNED BY public.windows.idwindow;
-
-
---
 -- Name: advocacy idadvocacy; Type: DEFAULT; Schema: public; Owner: sysadm
 --
 
 ALTER TABLE ONLY public.advocacy ALTER COLUMN idadvocacy SET DEFAULT nextval('public.advocacy_idadvocacy_seq'::regclass);
+
+
+--
+-- Name: advocacyuser idadvocacyuser; Type: DEFAULT; Schema: public; Owner: sysadm
+--
+
+ALTER TABLE ONLY public.advocacyuser ALTER COLUMN idadvocacyuser SET DEFAULT nextval('public.advocacyuser_idadvocacyuser_seq'::regclass);
 
 
 --
@@ -820,20 +748,6 @@ ALTER TABLE ONLY public.movementtypes ALTER COLUMN idmovementtypes SET DEFAULT n
 
 
 --
--- Name: role idrole; Type: DEFAULT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.role ALTER COLUMN idrole SET DEFAULT nextval('public.role_idrole_seq'::regclass);
-
-
---
--- Name: rolerights idroleright; Type: DEFAULT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.rolerights ALTER COLUMN idroleright SET DEFAULT nextval('public.rolerights_idroleright_seq'::regclass);
-
-
---
 -- Name: statuslitigation idstatuslitigation; Type: DEFAULT; Schema: public; Owner: sysadm
 --
 
@@ -869,13 +783,6 @@ ALTER TABLE ONLY public."user" ALTER COLUMN iduser SET DEFAULT nextval('public.u
 
 
 --
--- Name: windows idwindow; Type: DEFAULT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.windows ALTER COLUMN idwindow SET DEFAULT nextval('public.windows_idwindow_seq'::regclass);
-
-
---
 -- Data for Name: advocacy; Type: TABLE DATA; Schema: public; Owner: sysadm
 --
 
@@ -906,10 +813,11 @@ COPY public.advocacycustomer (idadvocacyfk, idcustomerfk) FROM stdin;
 
 
 --
--- Data for Name: advocacyuserroleright; Type: TABLE DATA; Schema: public; Owner: sysadm
+-- Data for Name: advocacyuser; Type: TABLE DATA; Schema: public; Owner: sysadm
 --
 
-COPY public.advocacyuserroleright (idadvocacyfk, idrolerightsfk, idutilizerfk) FROM stdin;
+COPY public.advocacyuser (idadvocacyuser, idadvocacyfk, iduserfk) FROM stdin;
+1	2	22
 \.
 
 
@@ -933,7 +841,11 @@ COPY public.cashflow (idcashflow, idcashierpk, closedat, openedat, closedbypk, o
 -- Data for Name: cashier; Type: TABLE DATA; Schema: public; Owner: sysadm
 --
 
-COPY public.cashier (idcashier, idadvocacypk, namecachier, currentmoney, statuscashier) FROM stdin;
+COPY public.cashier (idcashier, idadvocacypk, namecashier, currentmoney, statuscashier, isactive) FROM stdin;
+6	1	First One	200	t	t
+7	10	Teste	250	t	f
+5	1	Teste Update	500	t	t
+4	1	Teste Update	500	t	f
 \.
 
 
@@ -986,23 +898,6 @@ COPY public.movementtypes (idmovementtypes, namemovementtype, typemovementtype, 
 
 
 --
--- Data for Name: role; Type: TABLE DATA; Schema: public; Owner: sysadm
---
-
-COPY public.role (idrole, namerole, descriptionrole) FROM stdin;
-1	Administrador	Acesso a todas as informações
-\.
-
-
---
--- Data for Name: rolerights; Type: TABLE DATA; Schema: public; Owner: sysadm
---
-
-COPY public.rolerights (idroleright, idwindowfk, idrolefk, actionrolerights) FROM stdin;
-\.
-
-
---
 -- Data for Name: statuslitigation; Type: TABLE DATA; Schema: public; Owner: sysadm
 --
 
@@ -1039,15 +934,25 @@ COPY public.typelitigation (idtypelitigation, nametypelitigation, descriptiontyp
 --
 
 COPY public."user" (iduser, nameuser, cpfuser, rguser, emailuser, phoneuser, adressuser, ufuser, bairrouser, cityuser, passworduser, oabuser, lastadvocacyuserfk) FROM stdin;
-\.
-
-
---
--- Data for Name: windows; Type: TABLE DATA; Schema: public; Owner: sysadm
---
-
-COPY public.windows (idwindow, namewindow, actionwindow) FROM stdin;
-1	Cadastro Cliente	cadastrar,visualizar
+2	Marcelo	434.614.340-78	6.309.934	marcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+3	Marcelo	434.614.340-78	6.309.934	marcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+6	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+7	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+8	Marcelo	434.614.340-78	6.309.934	marcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+9	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+10	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+11	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+12	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+13	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+14	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+15	teste	00000	0000	000@000	00000	rua 0000	00	bairro 000	city 0000	0000	000	20
+16	Marcelo	434.614.340-78	6.309.934	marcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+17	Marcelo	434.614.340-78	6.309.934	marcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+18	Marcelo	434.654.340-78	6.309.924	maarcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+19	Marcelo	434.694.340-78	6.319.924	maaarcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+20	Marcelo	434.794.340-78	6.319.724	maasarcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+21	Marcelo	434.794.3240-78	6.319.7224	maassadarcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
+22	Marcelo	434.7394.3240-78	6.3219.7224	maassadadsrcelo.savian@gmail.com	49988154530	Rua albino kolbach	SC	Floresta	Joinvile	123456789	12344521312	2
 \.
 
 
@@ -1056,6 +961,13 @@ COPY public.windows (idwindow, namewindow, actionwindow) FROM stdin;
 --
 
 SELECT pg_catalog.setval('public.advocacy_idadvocacy_seq', 28, true);
+
+
+--
+-- Name: advocacyuser_idadvocacyuser_seq; Type: SEQUENCE SET; Schema: public; Owner: sysadm
+--
+
+SELECT pg_catalog.setval('public.advocacyuser_idadvocacyuser_seq', 1, true);
 
 
 --
@@ -1083,7 +995,7 @@ SELECT pg_catalog.setval('public.cashier_idadvocacypk_seq', 1, false);
 -- Name: cashier_idcashier_seq; Type: SEQUENCE SET; Schema: public; Owner: sysadm
 --
 
-SELECT pg_catalog.setval('public.cashier_idcashier_seq', 1, false);
+SELECT pg_catalog.setval('public.cashier_idcashier_seq', 7, true);
 
 
 --
@@ -1129,20 +1041,6 @@ SELECT pg_catalog.setval('public.movementtypes_idmovementtypes_seq', 1, false);
 
 
 --
--- Name: role_idrole_seq; Type: SEQUENCE SET; Schema: public; Owner: sysadm
---
-
-SELECT pg_catalog.setval('public.role_idrole_seq', 1, true);
-
-
---
--- Name: rolerights_idroleright_seq; Type: SEQUENCE SET; Schema: public; Owner: sysadm
---
-
-SELECT pg_catalog.setval('public.rolerights_idroleright_seq', 1, false);
-
-
---
 -- Name: statuslitigation_idstatuslitigation_seq; Type: SEQUENCE SET; Schema: public; Owner: sysadm
 --
 
@@ -1174,14 +1072,7 @@ SELECT pg_catalog.setval('public.typelitigation_idtypelitigation_seq', 1, false)
 -- Name: utilizer_iduser_seq; Type: SEQUENCE SET; Schema: public; Owner: sysadm
 --
 
-SELECT pg_catalog.setval('public.utilizer_iduser_seq', 1, false);
-
-
---
--- Name: windows_idwindow_seq; Type: SEQUENCE SET; Schema: public; Owner: sysadm
---
-
-SELECT pg_catalog.setval('public.windows_idwindow_seq', 1, true);
+SELECT pg_catalog.setval('public.utilizer_iduser_seq', 22, true);
 
 
 --
@@ -1201,11 +1092,11 @@ ALTER TABLE ONLY public.advocacycustomer
 
 
 --
--- Name: advocacyuserroleright advocacyutilizerroleright_pkey; Type: CONSTRAINT; Schema: public; Owner: sysadm
+-- Name: advocacyuser advocacyuser_pkey; Type: CONSTRAINT; Schema: public; Owner: sysadm
 --
 
-ALTER TABLE ONLY public.advocacyuserroleright
-    ADD CONSTRAINT advocacyutilizerroleright_pkey PRIMARY KEY (idadvocacyfk, idrolerightsfk, idutilizerfk);
+ALTER TABLE ONLY public.advocacyuser
+    ADD CONSTRAINT advocacyuser_pkey PRIMARY KEY (idadvocacyuser);
 
 
 --
@@ -1281,22 +1172,6 @@ ALTER TABLE ONLY public.movementtypes
 
 
 --
--- Name: role role_pkey; Type: CONSTRAINT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.role
-    ADD CONSTRAINT role_pkey PRIMARY KEY (idrole);
-
-
---
--- Name: rolerights rolerights_pkey; Type: CONSTRAINT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.rolerights
-    ADD CONSTRAINT rolerights_pkey PRIMARY KEY (idroleright);
-
-
---
 -- Name: statuslitigation statuslitigation_pkey; Type: CONSTRAINT; Schema: public; Owner: sysadm
 --
 
@@ -1337,14 +1212,6 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- Name: windows windows_pkey; Type: CONSTRAINT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.windows
-    ADD CONSTRAINT windows_pkey PRIMARY KEY (idwindow);
-
-
---
 -- Name: advocacycustomer advocacycustomer_idadvocacyfk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sysadm
 --
 
@@ -1361,27 +1228,19 @@ ALTER TABLE ONLY public.advocacycustomer
 
 
 --
--- Name: advocacyuserroleright advocacyutilizerroleright_idadvocacyfk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sysadm
+-- Name: advocacyuser advocacyuser_idadvocacyfk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sysadm
 --
 
-ALTER TABLE ONLY public.advocacyuserroleright
-    ADD CONSTRAINT advocacyutilizerroleright_idadvocacyfk_fkey FOREIGN KEY (idadvocacyfk) REFERENCES public.advocacy(idadvocacy);
-
-
---
--- Name: advocacyuserroleright advocacyutilizerroleright_idrolerightsfk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.advocacyuserroleright
-    ADD CONSTRAINT advocacyutilizerroleright_idrolerightsfk_fkey FOREIGN KEY (idrolerightsfk) REFERENCES public.rolerights(idroleright);
+ALTER TABLE ONLY public.advocacyuser
+    ADD CONSTRAINT advocacyuser_idadvocacyfk_fkey FOREIGN KEY (idadvocacyfk) REFERENCES public.advocacy(idadvocacy) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: advocacyuserroleright advocacyutilizerroleright_idutilizerfk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sysadm
+-- Name: advocacyuser advocacyuser_iduserfk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sysadm
 --
 
-ALTER TABLE ONLY public.advocacyuserroleright
-    ADD CONSTRAINT advocacyutilizerroleright_idutilizerfk_fkey FOREIGN KEY (idutilizerfk) REFERENCES public."user"(iduser);
+ALTER TABLE ONLY public.advocacyuser
+    ADD CONSTRAINT advocacyuser_iduserfk_fkey FOREIGN KEY (iduserfk) REFERENCES public."user"(iduser) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -1502,22 +1361,6 @@ ALTER TABLE ONLY public.movement
 
 ALTER TABLE ONLY public.movement
     ADD CONSTRAINT movement_iduserpk_fkey FOREIGN KEY (iduserpk) REFERENCES public."user"(iduser);
-
-
---
--- Name: rolerights rolerights_idrolefk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.rolerights
-    ADD CONSTRAINT rolerights_idrolefk_fkey FOREIGN KEY (idrolefk) REFERENCES public.role(idrole);
-
-
---
--- Name: rolerights rolerights_idwindowfk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sysadm
---
-
-ALTER TABLE ONLY public.rolerights
-    ADD CONSTRAINT rolerights_idwindowfk_fkey FOREIGN KEY (idwindowfk) REFERENCES public.windows(idwindow);
 
 
 --
