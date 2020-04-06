@@ -12,6 +12,11 @@ const UserService = require('./Services/UserService')
 const CashierService = require('./Services/CashierService')
 const AuthService = require('./Services/AuthService')
 const AreaLitigationService = require('./Services/AreaLitigationService')
+const FaseLitigationService = require('./Services/FaseLitigationService')
+const InstanciaLitigationService = require('./Services/InstanciaLitigationService')
+const StatusLitigationService = require('./Services/StatusLitigationService')
+const TypeLitigationService = require('./Services/TypeLitigationService')
+const TaskTypeService = require('./Services/TaskTypeService')
 
 //Config banco
 const query = new Pool({
@@ -279,6 +284,200 @@ app.post('/updateAreaLitigation', (request, response) => {
   const areaLitigation = new AreaLitigationService (query);
 
   areaLitigation.updateAreaLitigation(idAreaLitigation, nameAreaLitigation, descriptionAreaLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/insertFaseLitigation', (request, response) => {
+  const {nameFaseLitigation, descriptionFaseLitigation} = checkRequisitionType(request.body);
+
+  const faseLitigation = new FaseLitigationService (query);
+
+  faseLitigation.insertFaseLitigation(nameFaseLitigation, descriptionFaseLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteFaseLitigation', (request, response) => {
+  const {idFaseLitigation} = checkRequisitionType(request.body);
+
+  const faseLitigation = new FaseLitigationService (query);
+
+  faseLitigation.deleteFaseLitigation(idFaseLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectFaseLitigation', (request, response) => {
+
+  const faseLitigation = new FaseLitigationService (query);
+
+  faseLitigation.selectFaseLitigation().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/updateFaseLitigation', (request, response) => {
+  const {idFaseLitigation, nameFaseLitigation, descriptionFaseLitigation} = checkRequisitionType(request.body);
+
+  const faseLitigation = new FaseLitigationService (query);
+
+  faseLitigation.updateFaseLitigation(idFaseLitigation, nameFaseLitigation, descriptionFaseLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/insertInstanciaLitigation', (request, response) => {
+  const {nameInstanciaLitigation, descriptionInstanciaLitigation} = checkRequisitionType(request.body);
+
+  const InstanciaLitigation = new InstanciaLitigationService (query);
+
+  InstanciaLitigation.insertInstanciaLitigation(nameInstanciaLitigation, descriptionInstanciaLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteInstanciaLitigation', (request, response) => {
+  const {idInstanciaLitigation} = checkRequisitionType(request.body);
+
+  const InstanciaLitigation = new InstanciaLitigationService (query);
+
+  InstanciaLitigation.deleteInstanciaLitigation(idInstanciaLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectInstanciaLitigation', (request, response) => {
+
+  const InstanciaLitigation = new InstanciaLitigationService (query);
+
+  InstanciaLitigation.selectInstanciaLitigation().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/updateInstanciaLitigation', (request, response) => {
+  const {idInstanciaLitigation, nameInstanciaLitigation, descriptionInstanciaLitigation} = checkRequisitionType(request.body);
+
+  const InstanciaLitigation = new InstanciaLitigationService (query);
+
+  InstanciaLitigation.updateInstanciaLitigation(idInstanciaLitigation, nameInstanciaLitigation, descriptionInstanciaLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+app.post('/insertStatusLitigation', (request, response) => {
+  const {nameStatusLitigation, descriptionStatusLitigation} = checkRequisitionType(request.body);
+
+  const StatusLitigation = new StatusLitigationService (query);
+
+  StatusLitigation.insertStatusLitigation(nameStatusLitigation, descriptionStatusLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteStatusLitigation', (request, response) => {
+  const {idStatusLitigation} = checkRequisitionType(request.body);
+
+  const StatusLitigation = new StatusLitigationService (query);
+
+  StatusLitigation.deleteStatusLitigation(idStatusLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectStatusLitigation', (request, response) => {
+
+  const StatusLitigation = new StatusLitigationService (query);
+
+  StatusLitigation.selectStatusLitigation().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/updateStatusLitigation', (request, response) => {
+  const {idStatusLitigation, nameStatusLitigation, descriptionStatusLitigation} = checkRequisitionType(request.body);
+
+  const StatusLitigation = new StatusLitigationService (query);
+
+  StatusLitigation.updateStatusLitigation(idStatusLitigation, nameStatusLitigation, descriptionStatusLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/insertTypeLitigation', (request, response) => {
+  const {nameTypeLitigation, descriptionTypeLitigation} = checkRequisitionType(request.body);
+
+  const TypeLitigation = new TypeLitigationService (query);
+
+  TypeLitigation.insertTypeLitigation(nameTypeLitigation, descriptionTypeLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteTypeLitigation', (request, response) => {
+  const {idTypeLitigation} = checkRequisitionType(request.body);
+
+  const TypeLitigation = new TypeLitigationService (query);
+
+  TypeLitigation.deleteTypeLitigation(idTypeLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectTypeLitigation', (request, response) => {
+
+  const TypeLitigation = new TypeLitigationService (query);
+
+  TypeLitigation.selectTypeLitigation().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/updateTypeLitigation', (request, response) => {
+  const {idTypeLitigation, nameTypeLitigation, descriptionTypeLitigation} = checkRequisitionType(request.body);
+
+  const TypeLitigation = new TypeLitigationService (query);
+
+  TypeLitigation.updateTypeLitigation(idTypeLitigation, nameTypeLitigation, descriptionTypeLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/insertTaskType', (request, response) => {
+  const {nameTaskType, descriptionTaskType} = checkRequisitionType(request.body);
+
+  const TaskType = new TaskTypeService (query);
+
+  TaskType.insertTaskType(nameTaskType, descriptionTaskType).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteTaskType', (request, response) => {
+  const {idTaskType} = checkRequisitionType(request.body);
+
+  const TaskType = new TaskTypeService (query);
+
+  TaskType.deleteTaskType(idTaskType).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectTaskType', (request, response) => {
+
+  const TaskType = new TaskTypeService (query);
+
+  TaskType.selectTaskType().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/updateTaskType', (request, response) => {
+  const {idTaskType, nameTaskType, descriptionTaskType} = checkRequisitionType(request.body);
+
+  const TaskType = new TaskTypeService (query);
+
+  TaskType.updateTaskType(idTaskType, nameTaskType, descriptionTaskType).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
   })
 })
