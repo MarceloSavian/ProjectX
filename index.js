@@ -11,6 +11,7 @@ const AdvocacyService = require('./Services/AdvocacyService')
 const UserService = require('./Services/UserService')
 const CashierService = require('./Services/CashierService')
 const AuthService = require('./Services/AuthService')
+const AreaLitigationService = require('./Services/AreaLitigationService')
 
 //Config banco
 const query = new Pool({
@@ -239,6 +240,45 @@ app.post('/updateCashier', (request, response) => {
   const cashierService = new CashierService(query);
 
   cashierService.updateCashier(idCashier, idAdvocacypk, nameCashier, currentMoney,statusCashier).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/insertAreaLitigation', (request, response) => {
+  const {nameAreaLitigation, descriptionAreaLitigation} = checkRequisitionType(request.body);
+
+  const areaLitigation = new AreaLitigationService (query);
+
+  areaLitigation.insertAreaLitigation(nameAreaLitigation, descriptionAreaLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteAreaLitigation', (request, response) => {
+  const {idAreaLitigation} = checkRequisitionType(request.body);
+
+  const areaLitigation = new AreaLitigationService (query);
+
+  areaLitigation.deleteAreaLitigation(idAreaLitigation).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectAreaLitigation', (request, response) => {
+
+  const areaLitigation = new AreaLitigationService (query);
+
+  areaLitigation.selectAreaLitigation().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/updateAreaLitigation', (request, response) => {
+  const {idAreaLitigation, nameAreaLitigation, descriptionAreaLitigation} = checkRequisitionType(request.body);
+
+  const areaLitigation = new AreaLitigationService (query);
+
+  areaLitigation.updateAreaLitigation(idAreaLitigation, nameAreaLitigation, descriptionAreaLitigation).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
   })
 })
