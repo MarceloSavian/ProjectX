@@ -11,6 +11,7 @@ const AdvocacyService = require('./Services/AdvocacyService')
 const UserService = require('./Services/UserService')
 const CashierService = require('./Services/CashierService')
 const AuthService = require('./Services/AuthService')
+const MovementTypeService = require('./Services/MovementTypeService')
 
 //Config banco
 const query = new Pool({
@@ -239,6 +240,36 @@ app.post('/updateCashier', (request, response) => {
   const cashierService = new CashierService(query);
 
   cashierService.updateCashier(idCashier, idAdvocacypk, nameCashier, currentMoney,statusCashier).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/insertMovementType', (request, response) => {
+  const {nameMovementType, typeMovementType, statusMovementType, idAdvocacyfk} = checkRequisitionType(request.body);
+
+  const movementTypeService = new MovementTypeService(query);
+
+  movementTypeService.insertMovementType(nameMovementType, typeMovementType, statusMovementType, idAdvocacyfk).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/updateMovementType', (request, response) => {
+  const {idMovementType, nameMovementType, typeMovementType, statusMovementType} = checkRequisitionType(request.body);
+
+  const movementTypeService = new MovementTypeService(query);
+
+  movementTypeService.updateMovementType(idMovementType, nameMovementType, typeMovementType, statusMovementType).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/getMovementTypes', (request, response) => {
+  const {advocacyId} = checkRequisitionType(request.query);
+
+  const movementTypeService = new MovementTypeService(query);
+
+  movementTypeService.getMovementTypes(advocacyId).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
   })
 })
