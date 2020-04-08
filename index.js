@@ -18,14 +18,16 @@ const InstanciaLitigationService = require('./Services/InstanciaLitigationServic
 const StatusLitigationService = require('./Services/StatusLitigationService')
 const TypeLitigationService = require('./Services/TypeLitigationService')
 const TaskTypeService = require('./Services/TaskTypeService')
+const CashFlowService = require('./Services/CashFlowService')
+const MovementsService = require('./Services/MovementsService')
 
 //Config banco
 const query = new Pool({
   user: 'sysadm',
-  host: '192.168.0.253',
+  host: 'dobkovski.com',
   database: 'sysadm',
   password: 'R00tk1t!',
-  port: 5432
+  port: 9090
 });
 
 app.use(bodyParser.json())
@@ -504,6 +506,36 @@ app.post('/updateTaskType', (request, response) => {
   const TaskType = new TaskTypeService (query);
 
   TaskType.updateTaskType(idTaskType, nameTaskType, descriptionTaskType).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/openCashier', (request, response) => {
+  const {idCashier, openedAt, openedBy, initialCash, statusCashFlow} = checkRequisitionType(request.body);
+
+  const cashFlowService = new CashFlowService(query);
+
+  cashFlowService.openCashier(idCashier, openedAt, openedBy, initialCash, statusCashFlow).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/insertMovement', (request, response) => {
+  const {idCashFlow, idMovementTypespk, idUserpk, movementTimestamp, value, type} = checkRequisitionType(request.body);
+
+  const movementsService = new MovementsService(query);
+
+  movementsService.insertMovement(idCashFlow, idMovementTypespk, idUserpk, movementTimestamp, value, type).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/closeCashier', (request, response) => {
+  const {idCashier, closedBy} = checkRequisitionType(request.body);
+
+  const cashFlowService = new CashFlowService(query);
+
+  cashFlowService.closeCashier(idCashier, closedBy).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
   })
 })

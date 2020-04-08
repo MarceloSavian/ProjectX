@@ -69,7 +69,7 @@ class CashierRepository{
 
     checkStatusCashier(idCashier){
         return new Promise((resolve, reject) => {
-            this.query.query(`SELECT statusCashier FROM cashier where idCashier = ${idCashier}`, (error, results) => {
+            this.query.query(`SELECT * FROM cashier where idCashier = ${idCashier}`, (error, results) => {
                 if (error) {
                     console.log(error);
                     resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
@@ -77,6 +77,18 @@ class CashierRepository{
                 resolve({success:true, error:[], jsonData:results.rows})
             })
         });  
+    }
+
+    updateCashierStatus(idCashier,statusCashier){
+        return new Promise((resolve, reject) => {
+            this.query.query(`UPDATE cashier SET statusCashier = '${statusCashier}' where idCashier = ${idCashier}`, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    resolve({success:false, error:ErrorService.formatReponseError(ERRORS.CONNECTION_ERROR,""), jsonData:[]})
+                }
+                    resolve({success:true, error:[], jsonData:[]})
+              })
+        });
     }
 }
 module.exports = CashierRepository;

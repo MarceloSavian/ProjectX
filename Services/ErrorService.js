@@ -5,7 +5,8 @@ ERRORS = Object.freeze({
     CONNECTION_ERROR: -3,
     USER_ALREADY_EXIST: -4,
     USER_NOT_FOUND: -5,
-    UPDATE_CASHIER_ERROR:-6
+    UPDATE_CASHIER_ERROR:-6,
+    CASHIER_ALREADY_CLOSED:-7
 });
 
 errors = [
@@ -13,7 +14,8 @@ errors = [
     { code: ERRORS.CONNECTION_ERROR, description: "Erro de conexão"},
     { code: ERRORS.UPDATE_CASHIER_ERROR, description: "Caixa não pode ser editado se estiver aberto"},
     { code: ERRORS.USER_ALREADY_EXIST, description: "Usuario já encontrado com esses dados"},
-    { code: ERRORS.USER_NOT_FOUND, description: "E-mail ou senha inválidos"}
+    { code: ERRORS.USER_NOT_FOUND, description: "E-mail ou senha inválidos"},
+    { code: ERRORS.CASHIER_ALREADY_CLOSED, description: "Caixa já está fechado"},
 ];
 
 class ErrorFunctions {
