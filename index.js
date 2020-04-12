@@ -20,6 +20,7 @@ const TypeLitigationService = require('./Services/TypeLitigationService')
 const TaskTypeService = require('./Services/TaskTypeService')
 const CashFlowService = require('./Services/CashFlowService')
 const MovementsService = require('./Services/MovementsService')
+const CustomerService = require('./Services/CustomerService')
 
 //Config banco
 const query = new Pool({
@@ -536,6 +537,45 @@ app.post('/closeCashier', (request, response) => {
   const cashFlowService = new CashFlowService(query);
 
   cashFlowService.closeCashier(idCashier, closedBy).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/insertCustomer', (request, response) => {
+  const {nameCustomer, cpfCustomer, rgCustomer, emailCustomer, phoneCustomer, addressCustomer, bairroCustomer, cityCustomer, ufCustomer, passwordCustomer} = checkRequisitionType(request.body);
+
+  const customer = new CustomerService (query);
+
+  customer.insertCustomer(nameCustomer, cpfCustomer, rgCustomer, emailCustomer, phoneCustomer, addressCustomer, bairroCustomer, cityCustomer, ufCustomer, passwordCustomer).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/deleteCustomer', (request, response) => {
+  const {idCustomer} = checkRequisitionType(request.body);
+
+  const customer = new CustomerService (query);
+
+  customer.deleteCustomer(idCustomer).then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.get('/selectCustomer', (request, response) => {
+
+  const customer = new CustomerService (query);
+
+  customer.selectCustomer().then(res => {
+    response.send(formatResponseHtml(res.success, res.jsonData, res.error));
+  })
+})
+
+app.post('/updateCustomer', (request, response) => {
+  const {idCustomer, nameCustomer, cpfCustomer, rgCustomer, emailCustomer, phoneCustomer, addressCustomer, bairroCustomer, cityCustomer, ufCustomer, passwordCustomer} = checkRequisitionType(request.body);
+
+  const customer = new CustomerService (query);
+
+  customer.updateCustomer(idCustomer, nameCustomer, cpfCustomer, rgCustomer, emailCustomer, phoneCustomer, addressCustomer, bairroCustomer, cityCustomer, ufCustomer, passwordCustomer).then(res => {
     response.send(formatResponseHtml(res.success, res.jsonData, res.error));
   })
 })
